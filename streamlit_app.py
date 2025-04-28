@@ -66,21 +66,21 @@ filtered_df = vacancies_df[
 st.subheader(f"Showing {len(filtered_df)} vacancies")
 
 cols_per_row = 3
-cols = st.columns(cols_per_row)
 
-for idx, row in filtered_df.iterrows():
-    col = cols[idx % cols_per_row]
-    with col:
-        st.markdown("""
-            <div style='border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin-bottom: 20px;'>
-                <h4 style='margin-bottom: 5px;'>""" + row['title'] + """</h4>
-                <p style='margin-bottom: 5px;'><strong>Employer:</strong> """ + row['employer_name'] + """</p>
-                <p style='margin-bottom: 5px;'><strong>Type:</strong> """ + row['type'] + """</p>
-                <p style='margin-bottom: 10px;'><strong>Deadline:</strong> """ + row['deadline'].strftime('%Y-%m-%d') + """</p>
-                <a href='""" + row['url'] + """' target='_blank' style='text-decoration: none;'>
-                    <button style='padding: 8px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;'>Apply</button>
-                </a>
-            </div>
-        """, unsafe_allow_html=True)
+for idx in range(0, len(filtered_df), cols_per_row):
+    row = st.columns(cols_per_row)
+    for col_idx, vacancy_idx in enumerate(range(idx, min(idx + cols_per_row, len(filtered_df)))):
+        with row[col_idx]:
+            vacancy = filtered_df.iloc[vacancy_idx]
+            st.markdown(f"""
+                <div style='border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin-bottom: 20px;'>
+                    <h4 style='margin-bottom: 5px;'>{vacancy['title']}</h4>
+                    <p><strong>Employer:</strong> {vacancy['employer_name']}</p>
+                    <p><strong>Type:</strong> {vacancy['type']}</p>
+                    <p><strong>Deadline:</strong> {vacancy['deadline'].strftime('%Y-%m-%d')}</p>
+                    <a href='{vacancy['url']}' target='_blank'>
+                        <button style='padding: 8px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;'>Apply</button>
+                    </a>
+                </div>
+            """, unsafe_allow_html=True)
 
-st.success("✅ Done rendering tiles!")
