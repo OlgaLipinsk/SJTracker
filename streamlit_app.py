@@ -17,7 +17,7 @@ credentials = service_account.Credentials.from_service_account_info(
 client = bigquery.Client(credentials=credentials, project=credentials.project_id)
 
 # Fetch vacancy data
-@st.cache_data
+# @st.cache_data
 def load_vacancy_data():
     query = """
         SELECT
