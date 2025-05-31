@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import re
@@ -24,7 +23,7 @@ def highlight_keywords(text, keywords):
     pattern = r"\b(" + "|".join(map(re.escape, keywords)) + r")\b"
     return re.sub(pattern, r"**\1**", text, flags=re.IGNORECASE)
 
-# Load vacancy main data
+# Load vacancy data
 def load_vacancy_data():
     query = """
         SELECT
@@ -45,91 +44,40 @@ def load_vacancy_data():
     """
     return client.query(query).to_dataframe()
 
-# Load location mappings
-def load_location_data():
-    query = """
-        SELECT
-            vl.vacancy_id,
-            l.name AS location
-        FROM
-            `ProjectDB.vacancy_location` vl
-        JOIN
-            `ProjectDB.location` l
-        ON
-            vl.location_id = l.location_id
-    """
-    return client.query(query).to_dataframe()
-
-# Load keyword mappings
-def load_keyword_data():
-    query = """
-        SELECT
-            vk.vacancy_id,
-            k.word AS keyword
-        FROM
-            `ProjectDB.vacancy_keyword` vk
-        JOIN
-            `ProjectDB.keyword` k
-        ON
-            vk.keyword_id = k.keyword_id
-    """
-    return client.query(query).to_dataframe()
-
-# Load all data
 vacancies_df = load_vacancy_data()
 
-# Use try-except for optional associations
-try:
-    location_df = load_location_data()
-    vacancies_df = vacancies_df.merge(
-        location_df.groupby("vacancy_id")["location"].apply(list).reset_index(), 
-        on="vacancy_id", how="left"
-    )
-except Exception as e:
-    vacancies_df["location"] = [[] for _ in range(len(vacancies_df))]
-
-try:
-    keyword_map_df = load_keyword_data()
-    vacancies_df = vacancies_df.merge(
-        keyword_map_df.groupby("vacancy_id")["keyword"].apply(list).reset_index(),
-        on="vacancy_id", how="left"
-    )
-except Exception as e:
-    vacancies_df["keyword"] = [[] for _ in range(len(vacancies_df))]
-
-# Prepare filters
-all_locations = sorted({loc for sublist in vacancies_df['location'].dropna() for loc in sublist})
-all_keywords = sorted({kw for sublist in vacancies_df['keyword'].dropna() for kw in sublist})
-employers = sorted(vacancies_df['employer_name'].unique())
-types = sorted(vacancies_df['type'].unique())
+# Load keywords for highlighting
+keyword_query = "SELECT word FROM ProjectDB.keyword"
+keywords_df = client.query(keyword_query).to_dataframe()
+keywords = keywords_df['word'].dropna().tolist()
 
 # Sidebar filters
 with st.sidebar:
     st.header("🔎 Filters")
 
+    employers = vacancies_df['employer_name'].unique()
     selected_employers = st.multiselect("Employer", employers, default=employers)
+
+    types = vacancies_df['type'].unique()
     selected_types = st.multiselect("Vacancy Type", types, default=types)
-    selected_locations = st.multiselect("Location", all_locations, default=all_locations)
-    selected_keywords = st.multiselect("Keyword", all_keywords, default=all_keywords)
 
     min_date = vacancies_df['deadline'].min()
     max_date = vacancies_df['deadline'].max()
     selected_dates = st.date_input("Deadline Range", [min_date, max_date])
 
-# Apply filters
+# Filter data
 filtered_df = vacancies_df[
     (vacancies_df['employer_name'].isin(selected_employers)) &
     (vacancies_df['type'].isin(selected_types)) &
     (vacancies_df['deadline'] >= pd.to_datetime(selected_dates[0])) &
-    (vacancies_df['deadline'] <= pd.to_datetime(selected_dates[1])) &
-    (vacancies_df['location'].apply(lambda locs: any(l in locs for l in selected_locations) if isinstance(locs, list) else False)) &
-    (vacancies_df['keyword'].apply(lambda kws: any(k in kws for k in selected_keywords) if isinstance(kws, list) else False))
+    (vacancies_df['deadline'] <= pd.to_datetime(selected_dates[1]))
 ]
 
 # Display vacancies
 st.subheader(f"Showing {len(filtered_df)} vacancies")
 
 cols_per_row = 3
+
 for idx in range(0, len(filtered_df), cols_per_row):
     row = st.columns(cols_per_row)
     for col_idx, vacancy_idx in enumerate(range(idx, min(idx + cols_per_row, len(filtered_df)))):
@@ -140,8 +88,7 @@ for idx in range(0, len(filtered_df), cols_per_row):
                 st.markdown(f"**Employer:** {vacancy['employer_name']}")
                 st.markdown(f"**Type:** {vacancy['type']}")
                 st.markdown(f"**Deadline:** {vacancy['deadline'].strftime('%Y-%m-%d')}")
-                st.markdown(f"**Location:** {', '.join(vacancy['location']) if vacancy['location'] else 'N/A'}")
                 with st.expander("Job Description", expanded=False):
-                    full_text = highlight_keywords(vacancy['text'], all_keywords)
+                    full_text = highlight_keywords(vacancy['text'], keywords)
                     st.markdown(full_text, unsafe_allow_html=False)
-                st.link_button("Apply", vacancy['url'])
+                st.link_button("Apply", vacancy['url'])    
