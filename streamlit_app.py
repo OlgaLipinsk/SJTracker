@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import re
@@ -7,7 +6,7 @@ from google.oauth2 import service_account
 
 # Set page configuration
 st.set_page_config(page_title="Vacancy Dashboard", page_icon="🧩", layout="wide")
-st.title("Vacancy Dashboard")
+st.title("🧩 Vacancy Dashboard")
 
 # Load credentials from Streamlit secrets
 credentials = service_account.Credentials.from_service_account_info(
@@ -34,14 +33,13 @@ def load_vacancy_data():
             v.type,
             v.deadline,
             v.url,
-            e.name AS employer_name,
-            c.contact_name AS contact_name,
-            c.email AS contact_email,
-            c.phone AS contact_phone
-        FROM `ProjectDB.vacancy` v
-        JOIN `ProjectDB.employer` e ON v.employer_id = e.employer_id
-        LEFT JOIN `ProjectDB.vacancy_contact` vc ON v.vacancy_id = vc.vacancy_id
-        LEFT JOIN `ProjectDB.contact` c ON vc.contact_id = c.contact_id
+            e.name AS employer_name
+        FROM
+            `ProjectDB.vacancy` v
+        JOIN
+            `ProjectDB.employer` e
+        ON
+            v.employer_id = e.employer_id
         ORDER BY v.deadline ASC
     """
     return client.query(query).to_dataframe()
@@ -63,10 +61,14 @@ with st.sidebar:
     types = vacancies_df['type'].unique()
     selected_types = st.multiselect("Vacancy Type", types, default=types)
 
+    min_date = vacancies_df['deadline'].min()
+    max_date = vacancies_df['deadline'].max()
+    selected_dates = st.date_input("Deadline Range", [min_date, max_date])
+
 # Filter data
 filtered_df = vacancies_df[
     (vacancies_df['employer_name'].isin(selected_employers)) &
-    (vacancies_df['type'].isin(selected_types))
+    (vacancies_df['type'].isin(selected_types)) 
 ]
 
 # Display vacancies
@@ -83,16 +85,8 @@ for idx in range(0, len(filtered_df), cols_per_row):
                 st.markdown(f"### {vacancy['title']}")
                 st.markdown(f"**Employer:** {vacancy['employer_name']}")
                 st.markdown(f"**Type:** {vacancy['type']}")
-                if pd.notnull(vacancy['deadline']):
-                    st.markdown(f"**Deadline:** {vacancy['deadline'].strftime('%Y-%m-%d')}")
-                else:
-                    st.markdown("**Deadline:** N/A")
-
-                if pd.notnull(vacancy.get('contact_email')):
-                    st.markdown(f"**Contact Email:** {vacancy['contact_email']}")
-                if pd.notnull(vacancy.get('contact_phone')):
-                    st.markdown(f"**Phone:** {vacancy['contact_phone']}")
+                st.markdown(f"**Deadline:** {vacancy['deadline'].strftime('%Y-%m-%d')}")
                 with st.expander("Job Description", expanded=False):
                     full_text = highlight_keywords(vacancy['text'], keywords)
                     st.markdown(full_text, unsafe_allow_html=False)
-                st.link_button("Apply", vacancy['url'])
+                st.link_button("Apply", vacancy['url'])    
