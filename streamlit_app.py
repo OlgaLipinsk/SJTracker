@@ -61,9 +61,6 @@ with st.sidebar:
     types = vacancies_df['type'].unique()
     selected_types = st.multiselect("Vacancy Type", types, default=types)
 
-    min_date = vacancies_df['deadline'].min()
-    max_date = vacancies_df['deadline'].max()
-    selected_dates = st.date_input("Deadline Range", [min_date, max_date])
 
 # Filter data
 filtered_df = vacancies_df[
