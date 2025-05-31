@@ -35,7 +35,9 @@ def load_vacancy_data():
             v.url,
             e.name AS employer_name,
             c.email AS contact_email,
-            c.phone AS contact_phone
+            c.phone AS contact_phone,
+            l.kommune AS location_kommune,
+            l.postcode AS location_postcode
         FROM
             `ProjectDB.vacancy` v
         JOIN
@@ -44,7 +46,12 @@ def load_vacancy_data():
             `ProjectDB.vacancy_contact` vc ON v.vacancy_id = vc.vacancy_id
         LEFT JOIN
             `ProjectDB.contact` c ON vc.contact_id = c.contact_id
+        LEFT JOIN
+            `ProjectDB.vacancy_location` vl ON v.vacancy_id = vl.vacancy_id
+        LEFT JOIN
+            `ProjectDB.location` l ON vl.location_id = l.location_id
         ORDER BY v.deadline ASC
+
 
     """
     return client.query(query).to_dataframe()
@@ -66,12 +73,18 @@ with st.sidebar:
     types = vacancies_df['type'].unique()
     selected_types = st.multiselect("Vacancy Type", types, default=types)
 
+    locations = vacancies_df['location_kommune'].dropna().unique()
+    selected_locations = st.multiselect("Location", sorted(locations), default=locations)
+
+
 
 # Filter data
 filtered_df = vacancies_df[
     (vacancies_df['employer_name'].isin(selected_employers)) &
-    (vacancies_df['type'].isin(selected_types)) 
+    (vacancies_df['type'].isin(selected_types)) &
+    (vacancies_df['location_kommune'].isin(selected_locations))
 ]
+
 
 # Display vacancies
 st.subheader(f"Showing {len(filtered_df)} vacancies")
