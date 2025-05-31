@@ -34,3 +34,8 @@ See the included ER_Diagram.pdf for the database model.
 - ER_Diagram.pdf — Entity-Relationship diagram showing database structure
 - .gitignore — Excludes files from version control
 - README.md — Project documentation and usage instructions
+
+## Usage of regular expressions
+
+- In the SQL procedure: to validate email addresses and URLs — non-matching values are discarded (NULL).
+- In the app: to highlight predefined keywords in the vacancy description dynamically.
