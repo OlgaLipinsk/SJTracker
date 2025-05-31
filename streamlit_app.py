@@ -6,7 +6,7 @@ from google.oauth2 import service_account
 
 # Set page configuration
 st.set_page_config(page_title="Vacancy Dashboard", page_icon="🧩", layout="wide")
-st.title("🧩 Vacancy Dashboard")
+st.title("Vacancy Dashboard")
 
 # Load credentials from Streamlit secrets
 credentials = service_account.Credentials.from_service_account_info(
