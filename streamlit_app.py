@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import re
@@ -6,7 +7,7 @@ from google.oauth2 import service_account
 
 # Set page configuration
 st.set_page_config(page_title="Vacancy Dashboard", page_icon="🧩", layout="wide")
-st.title("Vacancy Dashboard")
+st.title("🧩 Vacancy Dashboard")
 
 # Load credentials from Streamlit secrets
 credentials = service_account.Credentials.from_service_account_info(
@@ -76,20 +77,27 @@ def load_keyword_data():
 
 # Load all data
 vacancies_df = load_vacancy_data()
-location_df = load_location_data()
-keyword_map_df = load_keyword_data()
 
-# Aggregate keywords and locations per vacancy
-vacancies_df = vacancies_df.merge(
-    location_df.groupby("vacancy_id")["location"].apply(list).reset_index(), 
-    on="vacancy_id", how="left"
-)
-vacancies_df = vacancies_df.merge(
-    keyword_map_df.groupby("vacancy_id")["keyword"].apply(list).reset_index(),
-    on="vacancy_id", how="left"
-)
+# Use try-except for optional associations
+try:
+    location_df = load_location_data()
+    vacancies_df = vacancies_df.merge(
+        location_df.groupby("vacancy_id")["location"].apply(list).reset_index(), 
+        on="vacancy_id", how="left"
+    )
+except Exception as e:
+    vacancies_df["location"] = [[] for _ in range(len(vacancies_df))]
 
-# Flatten all unique values for filters
+try:
+    keyword_map_df = load_keyword_data()
+    vacancies_df = vacancies_df.merge(
+        keyword_map_df.groupby("vacancy_id")["keyword"].apply(list).reset_index(),
+        on="vacancy_id", how="left"
+    )
+except Exception as e:
+    vacancies_df["keyword"] = [[] for _ in range(len(vacancies_df))]
+
+# Prepare filters
 all_locations = sorted({loc for sublist in vacancies_df['location'].dropna() for loc in sublist})
 all_keywords = sorted({kw for sublist in vacancies_df['keyword'].dropna() for kw in sublist})
 employers = sorted(vacancies_df['employer_name'].unique())
@@ -98,10 +106,12 @@ types = sorted(vacancies_df['type'].unique())
 # Sidebar filters
 with st.sidebar:
     st.header("🔎 Filters")
+
     selected_employers = st.multiselect("Employer", employers, default=employers)
     selected_types = st.multiselect("Vacancy Type", types, default=types)
     selected_locations = st.multiselect("Location", all_locations, default=all_locations)
     selected_keywords = st.multiselect("Keyword", all_keywords, default=all_keywords)
+
     min_date = vacancies_df['deadline'].min()
     max_date = vacancies_df['deadline'].max()
     selected_dates = st.date_input("Deadline Range", [min_date, max_date])
