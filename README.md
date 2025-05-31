@@ -17,36 +17,13 @@ https://studentjobtracker.streamlit.app/
 
 See the included ER_Diagram.pdf for the database model.
 
-## How to Run the App Locally
-
-1. Clone the repository:
-
-   git clone https://github.com/OlgaLipinsk/SJTracker.git  
-   cd SJTracker
-
-2. Install Python dependencies:
-
-   pip install -r requirements.txt
-
-3. Initialize the database:
-
-   Run the following SQL scripts in your SQL environment (e.g., BigQuery):
-
-   - create_tables.sql — defines the schema  
-   - refresh_vacancy_data.sql — loads and links data via a stored procedure
-
-   Example:
-   CALL ProjectDB.refresh_vacancy_data();
-
-4. Run the app:
-
-   streamlit run streamlit_app.py
-
 ## Documentation
 
-- The database model is described in ER_Diagram.pdf
-- SQL operations are used throughout (including SELECT queries)
-- A stored procedure is used for structured data ingestion from a staging table
+- The database model is described in `ER_Diagram.pdf`.
+- The Streamlit app uses SQL `SELECT` queries to fetch and display data from BigQuery.
+- Backend data preparation is handled via SQL scripts that include `MERGE` and `INSERT` operations to normalize and populate the database.
+- The `staging_vacancy` table is populated manually using `INSERT` statements. This is an area for potential extension — for example, by integrating an automated scraper.
+- The `refresh_vacancy_data` procedure loads and normalizes data from the staging table into the main schema using `MERGE` and `INSERT`, and is run manually via `CALL ProjectDB.refresh_vacancy_data()`.
 
 ## Project Files
 
@@ -57,4 +34,34 @@ See the included ER_Diagram.pdf for the database model.
 - ER_Diagram.pdf — Entity-Relationship diagram showing database structure
 - .gitignore — Excludes files from version control
 - README.md — Project documentation and usage instructions
+
+## Adapting the Project to Your Own GCP Setup
+
+This project is configured to use Google BigQuery with the following hardcoded identifiers:
+
+- Project ID: `leafy-sanctuary-458206-f8`
+- Dataset: `ProjectDB`
+
+These values appear in the SQL scripts (`create_tables.sql`, `refresh_vacancy_data.sql`), where fully qualified table names are used (e.g., `leafy-sanctuary-458206-f8.ProjectDB.skill`).
+
+The Streamlit app is also configured to connect to this specific GCP project via service account credentials loaded from Streamlit secrets.
+
+To Deploy the App with Your Own GCP Project you need to:
+
+1. **Create a BigQuery Dataset**
+
+   In your Google Cloud project (e.g., `my-own-project-id`), create a dataset named `ProjectDB`, or choose your own name.
+
+2. **Update SQL Scripts**
+
+   Replace all references to the original project.
+
+3. **Create and Configure a Service Account**
+
+- In your GCP project, create a service account with BigQuery Admin or appropriate permissions.
+- Download the service account key as a JSON file.
+
+4. **Update Streamlit Secrets**
+
+Add your service account credentials to `.streamlit/secrets.toml`
 
