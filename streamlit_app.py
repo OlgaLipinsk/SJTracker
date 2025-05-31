@@ -67,14 +67,14 @@ keywords = keywords_df['word'].dropna().tolist()
 with st.sidebar:
     st.header("🔎 Filters")
 
-    employers = vacancies_df['employer_name'].unique()
-    selected_employers = st.multiselect("Employer", employers, default=employers)
-
-    types = vacancies_df['type'].unique()
-    selected_types = st.multiselect("Vacancy Type", types, default=types)
-
+    employers = vacancies_df['employer_name'].dropna().unique()
+    types = vacancies_df['type'].dropna().unique()
     locations = vacancies_df['location_kommune'].dropna().unique()
-    selected_locations = st.multiselect("Location", sorted(locations), default=locations)
+
+    selected_employers = st.multiselect("Employer", sorted(employers))
+    selected_types = st.multiselect("Vacancy Type", sorted(types))
+    selected_locations = st.multiselect("Location", sorted(locations))
+
 
 
 
