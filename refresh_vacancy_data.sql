@@ -18,9 +18,10 @@ USING (
   SELECT DISTINCT
     contact_name AS name,
     CASE
-      WHEN REGEXP_CONTAINS(contact_email, r"^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$") THEN contact_email
-      ELSE NULL
-    END AS email,
+       WHEN REGEXP_CONTAINS(contact_email, r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$') THEN contact_email
+       ELSE NULL
+   END AS email,
+
     contact_phone AS phone
   FROM ProjectDB.staging_vacancy
   WHERE contact_name IS NOT NULL
