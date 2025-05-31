@@ -33,14 +33,19 @@ def load_vacancy_data():
             v.type,
             v.deadline,
             v.url,
-            e.name AS employer_name
+            e.name AS employer_name,
+            c.email AS contact_email,
+            c.phone AS contact_phone
         FROM
             `ProjectDB.vacancy` v
         JOIN
-            `ProjectDB.employer` e
-        ON
-            v.employer_id = e.employer_id
+            `ProjectDB.employer` e ON v.employer_id = e.employer_id
+        LEFT JOIN
+            `ProjectDB.vacancy_contact` vc ON v.vacancy_id = vc.vacancy_id
+        LEFT JOIN
+            `ProjectDB.contact` c ON vc.contact_id = c.contact_id
         ORDER BY v.deadline ASC
+
     """
     return client.query(query).to_dataframe()
 
@@ -84,6 +89,12 @@ for idx in range(0, len(filtered_df), cols_per_row):
                 st.markdown(f"**Type:** {vacancy['type']}")
                 if pd.notnull(vacancy['deadline']):
                     st.markdown(f"**Deadline:** {vacancy['deadline'].strftime('%Y-%m-%d')}")
+
+                if pd.notnull(vacancy.get('contact_email')):
+                    st.markdown(f"**Contact Email:** {vacancy['contact_email']}")
+                if pd.notnull(vacancy.get('contact_phone')):
+                    st.markdown(f"**Phone:** {vacancy['contact_phone']}")
+
 
                 with st.expander("Job Description", expanded=False):
                     full_text = highlight_keywords(vacancy['text'], keywords)
