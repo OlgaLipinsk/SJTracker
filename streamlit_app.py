@@ -82,7 +82,11 @@ for idx in range(0, len(filtered_df), cols_per_row):
                 st.markdown(f"### {vacancy['title']}")
                 st.markdown(f"**Employer:** {vacancy['employer_name']}")
                 st.markdown(f"**Type:** {vacancy['type']}")
-                st.markdown(f"**Deadline:** {vacancy['deadline'].strftime('%Y-%m-%d')}")
+                if pd.notnull(vacancy['deadline']):
+                    st.markdown(f"**Deadline:** {vacancy['deadline'].strftime('%Y-%m-%d')}")
+                else:
+                    st.markdown("**Deadline:** N/A")
+
                 if pd.notnull(vacancy.get('contact_email')):
                     st.markdown(f"**Contact Email:** {vacancy['contact_email']}")
                 if pd.notnull(vacancy.get('contact_phone')):
