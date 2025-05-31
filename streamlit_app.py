@@ -89,5 +89,6 @@ for idx in range(0, len(filtered_df), cols_per_row):
                 st.markdown(f"**Type:** {vacancy['type']}")
                 st.markdown(f"**Deadline:** {vacancy['deadline'].strftime('%Y-%m-%d')}")
                 st.link_button("Apply", vacancy['url'])
-                with st.expander("Job Description"):
-                    st.markdown(highlight_keywords(vacancy['text'], keywords))
+                with st.expander("Job Description", expanded=False):
+                    full_text = highlight_keywords(vacancy['text'], keywords)
+                    st.markdown(full_text, unsafe_allow_html=False)
