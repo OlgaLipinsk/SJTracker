@@ -1,6 +1,6 @@
 -- skill
-DROP TABLE IF EXISTS `leafy-sanctuary-458206-f8.ProjectDB.skill`;
-CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.skill`
+DROP TABLE IF EXISTS `ProjectDB.skill`;
+CREATE TABLE `ProjectDB.skill`
 (
   skill_id STRING NOT NULL,
   skill_name STRING,
@@ -8,32 +8,32 @@ CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.skill`
 );
 
 -- keyword
-DROP TABLE IF EXISTS `leafy-sanctuary-458206-f8.ProjectDB.keyword`;
-CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.keyword`
+DROP TABLE IF EXISTS `ProjectDB.keyword`;
+CREATE TABLE `ProjectDB.keyword`
 (
   keyword_id STRING NOT NULL,
   word STRING
 );
 
 -- vacancy_keyword
-DROP TABLE IF EXISTS `leafy-sanctuary-458206-f8.ProjectDB.vacancy_keyword`;
-CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.vacancy_keyword`
+DROP TABLE IF EXISTS `ProjectDB.vacancy_keyword`;
+CREATE TABLE `ProjectDB.vacancy_keyword`
 (
   vacancy_id STRING NOT NULL,
   keyword_id STRING NOT NULL
 );
 
 -- vacancy_location
-DROP TABLE IF EXISTS `leafy-sanctuary-458206-f8.ProjectDB.vacancy_location`;
-CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.vacancy_location`
+DROP TABLE IF EXISTS `ProjectDB.vacancy_location`;
+CREATE TABLE `ProjectDB.vacancy_location`
 (
   vacancy_id STRING NOT NULL,
   location_id STRING NOT NULL
 );
 
 -- contact
-DROP TABLE IF EXISTS `leafy-sanctuary-458206-f8.ProjectDB.contact`;
-CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.contact`
+DROP TABLE IF EXISTS `ProjectDB.contact`;
+CREATE TABLE `ProjectDB.contact`
 (
   contact_id STRING NOT NULL,
   name STRING,
@@ -42,16 +42,16 @@ CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.contact`
 );
 
 -- vacancy_contact
-DROP TABLE IF EXISTS `leafy-sanctuary-458206-f8.ProjectDB.vacancy_contact`;
-CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.vacancy_contact`
+DROP TABLE IF EXISTS `ProjectDB.vacancy_contact`;
+CREATE TABLE `ProjectDB.vacancy_contact`
 (
   vacancy_id STRING NOT NULL,
   contact_id STRING NOT NULL
 );
 
 -- location
-DROP TABLE IF EXISTS `leafy-sanctuary-458206-f8.ProjectDB.location`;
-CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.location`
+DROP TABLE IF EXISTS `ProjectDB.location`;
+CREATE TABLE `ProjectDB.location`
 (
   location_id STRING NOT NULL,
   postcode STRING,
@@ -59,16 +59,16 @@ CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.location`
 );
 
 -- vacancy_skill
-DROP TABLE IF EXISTS `leafy-sanctuary-458206-f8.ProjectDB.vacancy_skill`;
-CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.vacancy_skill`
+DROP TABLE IF EXISTS `ProjectDB.vacancy_skill`;
+CREATE TABLE `ProjectDB.vacancy_skill`
 (
   vacancy_id STRING NOT NULL,
   skill_id STRING NOT NULL
 );
 
 -- employer
-DROP TABLE IF EXISTS `leafy-sanctuary-458206-f8.ProjectDB.employer`;
-CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.employer`
+DROP TABLE IF EXISTS `ProjectDB.employer`;
+CREATE TABLE `ProjectDB.employer`
 (
   employer_id STRING NOT NULL,
   name STRING,
@@ -76,8 +76,8 @@ CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.employer`
 );
 
 -- vacancy
-DROP TABLE IF EXISTS `leafy-sanctuary-458206-f8.ProjectDB.vacancy`;
-CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.vacancy`
+DROP TABLE IF EXISTS `ProjectDB.vacancy`;
+CREATE TABLE `ProjectDB.vacancy`
 (
   vacancy_id STRING NOT NULL,
   title STRING,
@@ -89,8 +89,8 @@ CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.vacancy`
 );
 
 -- staging_vacancy
-DROP TABLE IF EXISTS `leafy-sanctuary-458206-f8.ProjectDB.staging_vacancy`;
-CREATE TABLE `leafy-sanctuary-458206-f8.ProjectDB.staging_vacancy`
+DROP TABLE IF EXISTS `ProjectDB.staging_vacancy`;
+CREATE TABLE `ProjectDB.staging_vacancy`
 (
   title STRING,
   text STRING,
