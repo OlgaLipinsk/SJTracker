@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import re
@@ -86,14 +87,14 @@ for idx in range(0, len(filtered_df), cols_per_row):
             vacancy = filtered_df.iloc[vacancy_idx]
             description = highlight_keywords(vacancy['text'], keywords)
             st.markdown(f"""
-                <div style='border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin-bottom: 20px;'>
+                <div style='border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin-bottom: 10px;'>
                     <h4 style='margin-bottom: 5px;'>{vacancy['title']}</h4>
                     <p><strong>Employer:</strong> {vacancy['employer_name']}</p>
                     <p><strong>Type:</strong> {vacancy['type']}</p>
                     <p><strong>Deadline:</strong> {vacancy['deadline'].strftime('%Y-%m-%d')}</p>
-                    <p>{description}</p>
                     <a href='{vacancy['url']}' target='_blank'>
                         <button style='padding: 8px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;'>Apply</button>
                     </a>
                 </div>
             """, unsafe_allow_html=True)
+            st.markdown(description)
