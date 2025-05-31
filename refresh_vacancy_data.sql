@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE `leafy-sanctuary-458206-f8.ProjectDB.refresh_vacancy_data`()
+CREATE OR REPLACE PROCEDURE `ProjectDB.refresh_vacancy_data`()
 BEGIN
 
   -- Insert employers
