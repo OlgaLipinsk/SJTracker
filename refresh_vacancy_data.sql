@@ -12,16 +12,23 @@ BEGIN
   WHEN NOT MATCHED THEN
     INSERT (employer_id, name, industry) VALUES (GENERATE_UUID(), S.name, S.industry);
 
-  -- Insert contacts
-  MERGE ProjectDB.contact AS T
-  USING (
-    SELECT DISTINCT contact_name AS name, contact_email AS email, contact_phone AS phone
-    FROM ProjectDB.staging_vacancy
-    WHERE contact_email IS NOT NULL
-  ) AS S
-  ON T.email = S.email
-  WHEN NOT MATCHED THEN
-    INSERT (contact_id, name, email, phone) VALUES (GENERATE_UUID(), S.name, S.email, S.phone);
+  -- Insert contacts with validated email
+MERGE ProjectDB.contact AS T
+USING (
+  SELECT DISTINCT
+    contact_name AS name,
+    CASE
+      WHEN REGEXP_CONTAINS(contact_email, r"^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$") THEN contact_email
+      ELSE NULL
+    END AS email,
+    contact_phone AS phone
+  FROM ProjectDB.staging_vacancy
+  WHERE contact_name IS NOT NULL
+) AS S
+ON T.email = S.email
+WHEN NOT MATCHED THEN
+  INSERT (contact_id, name, email, phone) VALUES (GENERATE_UUID(), S.name, S.email, S.phone);
+
 
   -- Insert locations
   MERGE ProjectDB.location AS T
@@ -56,23 +63,27 @@ BEGIN
   WHEN NOT MATCHED THEN
     INSERT (keyword_id, word) VALUES (GENERATE_UUID(), S.word);
 
-  -- Insert vacancies with MERGE (no duplicates)
-  MERGE ProjectDB.vacancy AS T
-  USING (
-    SELECT DISTINCT
-      v.title,
-      v.text,
-      v.type,
-      v.deadline,
-      v.url,
-      e.employer_id
-    FROM ProjectDB.staging_vacancy v
-    JOIN ProjectDB.employer e ON v.employer_name = e.name
-  ) AS S
-  ON T.title = S.title AND T.url = S.url
-  WHEN NOT MATCHED THEN
-    INSERT (vacancy_id, title, text, type, deadline, url, employer_id)
-    VALUES (GENERATE_UUID(), S.title, S.text, S.type, S.deadline, S.url, S.employer_id);
+ -- Insert vacancies with validated URL
+MERGE ProjectDB.vacancy AS T
+USING (
+  SELECT DISTINCT
+    v.title,
+    v.text,
+    v.type,
+    v.deadline,
+    CASE
+      WHEN REGEXP_CONTAINS(v.url, r"^https?://") THEN v.url
+      ELSE NULL
+    END AS url,
+    e.employer_id
+  FROM ProjectDB.staging_vacancy v
+  JOIN ProjectDB.employer e ON v.employer_name = e.name
+) AS S
+ON T.title = S.title AND T.url = S.url
+WHEN NOT MATCHED THEN
+  INSERT (vacancy_id, title, text, type, deadline, url, employer_id)
+  VALUES (GENERATE_UUID(), S.title, S.text, S.type, S.deadline, S.url, S.employer_id);
+
 
   -- Insert into vacancy_skill
   INSERT INTO ProjectDB.vacancy_skill (vacancy_id, skill_id)
