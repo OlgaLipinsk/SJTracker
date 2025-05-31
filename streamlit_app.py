@@ -35,6 +35,7 @@ def load_vacancy_data():
             v.deadline,
             v.url,
             e.name AS employer_name,
+            c.contact_name AS contact_name,
             c.email AS contact_email,
             c.phone AS contact_phone
         FROM `ProjectDB.vacancy` v
@@ -82,6 +83,7 @@ for idx in range(0, len(filtered_df), cols_per_row):
                 st.markdown(f"### {vacancy['title']}")
                 st.markdown(f"**Employer:** {vacancy['employer_name']}")
                 st.markdown(f"**Type:** {vacancy['type']}")
+                st.markdown(f"**Contact name:** {vacancy['contact_name']}")
                 if pd.notnull(vacancy['deadline']):
                     st.markdown(f"**Deadline:** {vacancy['deadline'].strftime('%Y-%m-%d')}")
                 else:
