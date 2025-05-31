@@ -82,7 +82,7 @@ for idx in range(0, len(filtered_df), cols_per_row):
                 st.markdown(f"### {vacancy['title']}")
                 st.markdown(f"**Employer:** {vacancy['employer_name']}")
                 st.markdown(f"**Type:** {vacancy['type']}")
-                st.markdown(f"**Deadline:** {vacancy['deadline'].strftime('%Y-%m-%d')}")
+                
                 with st.expander("Job Description", expanded=False):
                     full_text = highlight_keywords(vacancy['text'], keywords)
                     st.markdown(full_text, unsafe_allow_html=False)
