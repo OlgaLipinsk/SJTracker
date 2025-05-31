@@ -79,11 +79,17 @@ with st.sidebar:
 
 
 # Filter data
-filtered_df = vacancies_df[
-    (vacancies_df['employer_name'].isin(selected_employers)) &
-    (vacancies_df['type'].isin(selected_types)) &
-    (vacancies_df['location_kommune'].isin(selected_locations))
-]
+filtered_df = vacancies_df.copy()
+
+if selected_employers:
+    filtered_df = filtered_df[filtered_df['employer_name'].isin(selected_employers)]
+
+if selected_types:
+    filtered_df = filtered_df[filtered_df['type'].isin(selected_types)]
+
+if selected_locations:
+    filtered_df = filtered_df[filtered_df['location_kommune'].isin(selected_locations)]
+
 
 
 # Display vacancies
