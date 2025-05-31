@@ -97,4 +97,5 @@ for idx in range(0, len(filtered_df), cols_per_row):
                     </a>
                 </div>
             """, unsafe_allow_html=True)
-            st.markdown(description)
+            with st.expander("Job Description"):
+                st.markdown(description)
