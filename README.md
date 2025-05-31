@@ -28,10 +28,11 @@ See the included ER_Diagram.pdf for the database model.
 ## Project Files
 
 - streamlit_app.py — Main Streamlit frontend that displays job data and interacts with the database
-- create_tables.sql — SQL script that creates the normalized database schema
-- refresh_vacancy_data.sql — SQL script that defines and runs the stored procedure to populate the schema
+- create_tables.sql — SQL script that creates the tables
+- refresh_vacancy_data.sql — SQL script that defines the stored procedure to populate the schema
 - requirements.txt — Python dependencies needed to run the app
 - ER_Diagram.pdf — Entity-Relationship diagram showing database structure
+- example_insert.sql - An example of correct insert statement for staging_vacancy
 - .gitignore — Excludes files from version control
 - README.md — Project documentation and usage instructions
 
