@@ -27,25 +27,22 @@ def highlight_keywords(text, keywords):
 def load_vacancy_data():
     query = """
         SELECT
-  v.vacancy_id,
-  v.title,
-  v.text,
-  v.type,
-  v.deadline,
-  v.url,
-  e.name AS employer_name,
-  l.kommune AS location_kommune,
-  ARRAY_AGG(DISTINCT s.skill_name IGNORE NULLS) AS skills
-FROM ProjectDB.vacancy v
-JOIN ProjectDB.employer e ON v.employer_id = e.employer_id
-LEFT JOIN ProjectDB.vacancy_location vl ON v.vacancy_id = vl.vacancy_id
-LEFT JOIN ProjectDB.location l ON vl.location_id = l.location_id
-LEFT JOIN ProjectDB.vacancy_skill vs ON v.vacancy_id = vs.vacancy_id
-LEFT JOIN ProjectDB.skill s ON vs.skill_id = s.skill_id
-GROUP BY v.vacancy_id, v.title, v.text, v.type, v.deadline, v.url, e.name, l.kommune
-
-
-
+          v.vacancy_id,
+          v.title,
+          v.text,
+          v.type,
+          v.deadline,
+          v.url,
+          e.name AS employer_name,
+          l.kommune AS location_kommune,
+          ARRAY_AGG(DISTINCT s.skill_name IGNORE NULLS) AS skills
+        FROM ProjectDB.vacancy v
+        JOIN ProjectDB.employer e ON v.employer_id = e.employer_id
+        LEFT JOIN ProjectDB.vacancy_location vl ON v.vacancy_id = vl.vacancy_id
+        LEFT JOIN ProjectDB.location l ON vl.location_id = l.location_id
+        LEFT JOIN ProjectDB.vacancy_skill vs ON v.vacancy_id = vs.vacancy_id
+        LEFT JOIN ProjectDB.skill s ON vs.skill_id = s.skill_id
+        GROUP BY v.vacancy_id, v.title, v.text, v.type, v.deadline, v.url, e.name, l.kommune
     """
     return client.query(query).to_dataframe()
 
