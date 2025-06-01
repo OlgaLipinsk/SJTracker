@@ -67,7 +67,7 @@ with st.sidebar:
     
     selected_employers = st.multiselect("Employer", sorted(employers))
     selected_types = st.multiselect("Vacancy Type", sorted(types))    
-    selected_skills = st.sidebar.multiselect("Skills", skills, default=skills)
+    selected_skills = st.multiselect("Skills", sorted(skills))
     selected_locations = st.multiselect("Location", sorted(locations))
 
 
