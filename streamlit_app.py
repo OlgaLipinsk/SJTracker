@@ -114,11 +114,6 @@ for idx in range(0, len(filtered_df), cols_per_row):
                 if pd.notnull(vacancy.get('contact_phone')):
                     st.markdown(f"**Phone:** {vacancy['contact_phone']}")
 
-                skills = vacancy.get('skills')
-                if isinstance(skills, list) and skills:
-                    st.markdown(f"**Skills:** {', '.join(skills)}")
-
-
 
                 with st.expander("Job Description", expanded=False):
                     full_text = highlight_keywords(vacancy['text'], keywords)
