@@ -34,23 +34,17 @@ def load_vacancy_data():
             v.deadline,
             v.url,
             e.name AS employer_name,
-            c.email AS contact_email,
-            c.phone AS contact_phone,
-            l.kommune AS location_kommune,
-            l.postcode AS location_postcode
+            ARRAY_AGG(DISTINCT s.skill_name) AS skills
         FROM
-            `ProjectDB.vacancy` v
+            ProjectDB.vacancy v
         JOIN
-            `ProjectDB.employer` e ON v.employer_id = e.employer_id
+            ProjectDB.employer e ON v.employer_id = e.employer_id
         LEFT JOIN
-            `ProjectDB.vacancy_contact` vc ON v.vacancy_id = vc.vacancy_id
+            ProjectDB.vacancy_skill vs ON v.vacancy_id = vs.vacancy_id
         LEFT JOIN
-            `ProjectDB.contact` c ON vc.contact_id = c.contact_id
-        LEFT JOIN
-            `ProjectDB.vacancy_location` vl ON v.vacancy_id = vl.vacancy_id
-        LEFT JOIN
-            `ProjectDB.location` l ON vl.location_id = l.location_id
-        ORDER BY v.deadline ASC
+            ProjectDB.skill s ON vs.skill_id = s.skill_id
+        GROUP BY
+            v.vacancy_id, v.title, v.text, v.type, v.deadline, v.url, e.name
 
 
     """
@@ -70,9 +64,11 @@ with st.sidebar:
     employers = vacancies_df['employer_name'].dropna().unique()
     types = vacancies_df['type'].dropna().unique()
     locations = vacancies_df['location_kommune'].dropna().unique()
-
+    skills = sorted(set(skill for skill_list in vacancies_df['skills'] for skill in skill_list if skill))
+    
     selected_employers = st.multiselect("Employer", sorted(employers))
-    selected_types = st.multiselect("Vacancy Type", sorted(types))
+    selected_types = st.multiselect("Vacancy Type", sorted(types))    
+    selected_skills = st.sidebar.multiselect("Skills", skills, default=skills)
     selected_locations = st.multiselect("Location", sorted(locations))
 
 
@@ -90,6 +86,10 @@ if selected_types:
 if selected_locations:
     filtered_df = filtered_df[filtered_df['location_kommune'].isin(selected_locations)]
 
+if selected_skills:
+    filtered_df = filtered_df[
+        filtered_df['skills'].apply(lambda sk: any(skill in sk for skill in selected_skills))
+    ]
 
 
 # Display vacancies
@@ -113,6 +113,11 @@ for idx in range(0, len(filtered_df), cols_per_row):
                     st.markdown(f"**Contact Email:** {vacancy['contact_email']}")
                 if pd.notnull(vacancy.get('contact_phone')):
                     st.markdown(f"**Phone:** {vacancy['contact_phone']}")
+
+                skills = vacancy.get('skills')
+                if isinstance(skills, list) and skills:
+                    st.markdown(f"**Skills:** {', '.join(skills)}")
+
 
 
                 with st.expander("Job Description", expanded=False):
