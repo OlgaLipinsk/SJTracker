@@ -35,11 +35,11 @@ banner_html = """
 </style>
 """
 
+st.title("Student Job Tracker")
 st.markdown(banner_html, unsafe_allow_html=True)
 
 
-#st.image("banner-pl.jpg")
-st.title("Student Job Tracker")
+
 
 
 # Load credentials from Streamlit secrets
