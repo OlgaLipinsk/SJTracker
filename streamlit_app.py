@@ -53,6 +53,7 @@ keyword_query = "SELECT word FROM ProjectDB.keyword"
 keywords_df = client.query(keyword_query).to_dataframe()
 keywords = keywords_df['word'].dropna().tolist()
 
+st.image("banner-pl.jpg")
 # Sidebar filters
 with st.sidebar:
     st.header("🔎 Filters")
