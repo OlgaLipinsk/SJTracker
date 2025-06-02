@@ -5,6 +5,7 @@ from google.cloud import bigquery
 from google.oauth2 import service_account
 
 # Set page configuration
+st.image("banner-pl.jpg")
 st.set_page_config(page_title="Vacancy Dashboard", page_icon="🧩", layout="wide")
 st.title("🧩 Vacancy Dashboard")
 
@@ -53,7 +54,7 @@ keyword_query = "SELECT word FROM ProjectDB.keyword"
 keywords_df = client.query(keyword_query).to_dataframe()
 keywords = keywords_df['word'].dropna().tolist()
 
-st.image("banner-pl.jpg")
+
 # Sidebar filters
 with st.sidebar:
     st.header("🔎 Filters")
@@ -88,7 +89,7 @@ if selected_skills:
         filtered_df['skills'].apply(lambda sk: any(skill in sk for skill in selected_skills))
     ]
 
-st.image("banner-pl.jpg")
+
 # Display vacancies
 st.subheader(f"Showing {len(filtered_df)} vacancies")
 
