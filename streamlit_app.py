@@ -12,7 +12,7 @@ import streamlit as st
 
 banner_html = """
 <div style="
-    background: linear-gradient(90deg, #ffaf7b, #d76d77, #3a1c71);
+    background: linear-gradient(90deg, #b31217, #ff5252);
     padding: 1.2em;
     border-radius: 16px;
     text-align: center;
