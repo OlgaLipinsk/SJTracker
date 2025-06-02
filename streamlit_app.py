@@ -7,7 +7,38 @@ from google.oauth2 import service_account
 # Set page configuration
 
 st.set_page_config(page_title="Vacancy Dashboard", page_icon="🧩", layout="wide")
-st.image("banner-pl.jpg")
+
+import streamlit as st
+
+banner_html = """
+<div style="
+    background: linear-gradient(90deg, #ffaf7b, #d76d77, #3a1c71);
+    padding: 1.2em;
+    border-radius: 16px;
+    text-align: center;
+    margin-bottom: 2em;
+">
+  <span style="
+    font-size: 2em;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 2px;
+    animation: blinker 1s linear infinite;
+    ">
+    Your advertisement could be here
+  </span>
+</div>
+<style>
+@keyframes blinker {
+  50% { opacity: 0.2; }
+}
+</style>
+"""
+
+st.markdown(banner_html, unsafe_allow_html=True)
+
+
+#st.image("banner-pl.jpg")
 st.title("Student Job Tracker")
 
 
