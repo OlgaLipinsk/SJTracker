@@ -87,7 +87,7 @@ if selected_skills:
         filtered_df['skills'].apply(lambda sk: any(skill in sk for skill in selected_skills))
     ]
 
-
+st.image("banner-pl.jpg")
 # Display vacancies
 st.subheader(f"Showing {len(filtered_df)} vacancies")
 
