@@ -7,7 +7,7 @@ from google.oauth2 import service_account
 # Set page configuration
 
 st.set_page_config(page_title="Vacancy Dashboard", page_icon="🧩", layout="wide")
-st.title("Student Vacancies")
+st.title("Student Job Tracker")
 st.image("banner-pl.jpg")
 
 # Load credentials from Streamlit secrets
