@@ -5,9 +5,10 @@ from google.cloud import bigquery
 from google.oauth2 import service_account
 
 # Set page configuration
-st.image("banner-pl.jpg")
+
 st.set_page_config(page_title="Vacancy Dashboard", page_icon="🧩", layout="wide")
 st.title("🧩 Vacancy Dashboard")
+st.image("banner-pl.jpg")
 
 # Load credentials from Streamlit secrets
 credentials = service_account.Credentials.from_service_account_info(
