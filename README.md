@@ -1,6 +1,6 @@
 # Student Job Tracker
 
-A Streamlit web application for tracking and exploring job vacancies, built with BigQuery database backend.
+A Streamlit web application for tracking and exploring job vacancies.
 
 ## Features
 
@@ -17,7 +17,7 @@ See the included ER_Diagram.pdf for the database model.
 
 ### How to compile the app from source
 
-This project uses **Streamlit** for the frontend and **Google BigQuery** for data storage. There is no compilation step — the app runs as a standard Streamlit script. See more detailed instructions below.
+This project uses **Streamlit** for the frontend and **Google BigQuery** for data storage, the app is deployed in the Streamlit Community Cloud. There is no compilation step, see more detailed instructions below.
 
 ### Launch the App
 
@@ -55,7 +55,7 @@ https://studentjobtracker.streamlit.app/
 
 ## How to Run and Set Up the App
 
-This project uses **Streamlit** for the frontend and **Google BigQuery** for data storage. There is no compilation step — the app runs as a standard Streamlit script.
+The application can be deployed either locally or, preferably, in the Streamlit Community Cloud. The database backend is to be deployed in BigQuery.
 
 ### Running Locally
 
